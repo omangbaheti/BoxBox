@@ -28,13 +28,12 @@ public class Tile : MonoBehaviour
         }
     }
 
-    public GameObject CheckTargetTiles(GameObject playerController, Vector3 input)
+    public GameObject CheckTargetTiles(GameObject playerController, Vector3 input, bool isHorizontal)
     {
         Vector3 cubeScale = playerController.transform.localScale;
-        Vector3Int tileDimensions = new(Mathf.RoundToInt(cubeScale.x), 0, Mathf.RoundToInt(cubeScale.x));
-        int tileLength = !Mathf.Approximately(input.x, 0)? 
-                            tileDimensions.x: 
-                            tileDimensions.z;
+        Vector3Int tileDimensions = isHorizontal ? new(Mathf.RoundToInt(cubeScale.x), 0, Mathf.RoundToInt(cubeScale.z)) : new(Mathf.RoundToInt(cubeScale.z), 0, Mathf.RoundToInt(cubeScale.x));
+        Debug.Log(tileDimensions);
+        int tileLength = !Mathf.Approximately(input.x, 0)? tileDimensions.x: tileDimensions.z;
         GameObject landingTile = ReturnLandingTile(tileLength, input);
         return landingTile;
         for (int i = 0; i < tileDimensions.x; i++)

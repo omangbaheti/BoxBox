@@ -12,6 +12,7 @@ public class PlayerMovement : MonoBehaviour
     private PlayerInput playerInput;
     private InputAction moveAction;
     private bool canMove = true;
+    private bool isHorizontal = false;
     [SerializeField] private CalculatePivots[] pivots;
 
 
@@ -42,11 +43,8 @@ public class PlayerMovement : MonoBehaviour
         Ray downwardRay = new Ray(transform.position, Vector3.down);
         Physics.Raycast(downwardRay, out var tileHit, 0.5f);
         GameObject tile = tileHit.transform.gameObject;
-        
         if (!tile.TryGetComponent(out Tile tileData)) return;
-
-        Debug.Log("Reached Here");
-        targetTile = tileData.CheckTargetTiles(gameObject, input);
+        targetTile = tileData.CheckTargetTiles(gameObject, input, isHorizontal);
         if(targetTile == null) return;
         StartCoroutine(AnimateMove(input));
     }
@@ -57,10 +55,14 @@ public class PlayerMovement : MonoBehaviour
         if(input.magnitude > 1) yield break;
         canMove = false;
         Vector3 targetPosition = new Vector3(targetTile.transform.position.x, transform.position.y, targetTile.transform.position.z);
+        Vector3 rotationAngle = isHorizontal ?new Vector3(0, 90, 0) :Vector3.zero ;
+        isHorizontal = !isHorizontal;
+        if (!Mathf.Approximately(input.x, 0f)) 
+            rotationAngle *= input.x;
+        else 
+            rotationAngle *= input.z;
         transform.DOMove( targetPosition , 0.1f);
-        Vector3 newScale = new Vector3(transform.localScale.z, 0 ,transform.localScale.x);
-        transform.localScale = newScale;
-        //yield return transform.DORotate(rotationAngle, 0.1f, RotateMode.WorldAxisAdd).SetRelative().WaitForCompletion();
+        yield return transform.DORotate(rotationAngle, 0.1f, RotateMode.Fast).WaitForCompletion();
         canMove = true;
     }
     // Update is called once per frame
