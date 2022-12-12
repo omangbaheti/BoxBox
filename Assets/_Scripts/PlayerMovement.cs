@@ -13,8 +13,10 @@ public class PlayerMovement : MonoBehaviour
     private PlayerInput playerInput;
     private InputAction moveAction;
     private bool canMove = true;
+    private bool isCorrectingPosition = false;
     private Dictionary<PivotPlacement, Transform> getPivot = new Dictionary<PivotPlacement, Transform>();
     private Pose cachedPose = new Pose();
+    private IEnumerator currentCoroutine;
 
     // Start is called before the first frame update
     void Start()
@@ -34,17 +36,24 @@ public class PlayerMovement : MonoBehaviour
     
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("Collided");
+
         if (collision.gameObject.CompareTag("Wall"))
+        {
+            StopCoroutine(currentCoroutine);
             StartCoroutine(OnInvalidPosition());
+        }
     }
     
     private IEnumerator OnInvalidPosition()
     {
+        Debug.Log("Collided");
         canMove = false;
+        isCorrectingPosition = true;
         transform.DOMove(cachedPose.position, 0.2f);
-        yield return transform.DORotate(cachedPose.rotation.eulerAngles, 0.2f, RotateMode.Fast);
+        yield return transform.DORotate(cachedPose.rotation.eulerAngles, 0.2f, RotateMode.Fast).WaitForCompletion();
+        ConfigurePivots();
         canMove = true;
+        isCorrectingPosition = false;
     }
     private void MoveActionOnPerformed(Vector2 input)
     {
@@ -56,33 +65,62 @@ public class PlayerMovement : MonoBehaviour
     {
         if(!canMove) return;
         canMove = false;
-        float rotationAngle = 90f;
-        
-        if (input == Vector3.right || input == Vector3.left)
-        {
-            rotationAngle *= Math.Sign(input.x);
-        }
-        else if (input == Vector3.forward || input == Vector3.back)
-        {
-            rotationAngle *= Math.Sign(-1 * input.z);
-        }
-        else
-        {
-            canMove = true;
-            return;
-        }
         Vector3 pivotPosition = FindPivotPosition(input);
+        float rotationAngle = DetermineRotationAngle(input);
         if (pivotPosition == Vector3.zero)
         {
             canMove = true;
             return;
         }
-        StartCoroutine(RotateBodyAroundPivot(pivotPosition, 0.2f, rotationAngle));
+        currentCoroutine = RotateBodyAroundPivot(pivotPosition, 0.2f, rotationAngle);
+        StartCoroutine(currentCoroutine);
+    }
+
+    private float DetermineRotationAngle(Vector3 input)
+    {
+        float rotationAngle = 90f;
+        if (input == Vector3.right)
+        {
+            if (currentPivot == PivotPlacement.BottomRight)
+                rotationAngle = 90f;
+            else if (currentPivot == PivotPlacement.TopRight)
+                rotationAngle = -90f;
+            return rotationAngle;
+        }
+
+        if (input == Vector3.left)
+        {
+            if (currentPivot == PivotPlacement.BottomLeft)
+                rotationAngle = -90f;
+            else if (currentPivot == PivotPlacement.TopLeft)
+                rotationAngle = 90f;
+            return rotationAngle;
+        }
+
+        if (input == Vector3.forward)
+        {
+            if (currentPivot == PivotPlacement.TopRight)
+                rotationAngle = 90f;
+            else if (currentPivot == PivotPlacement.TopLeft)
+                rotationAngle = -90f;
+            return rotationAngle;
+        }
+
+        if (input == Vector3.back)
+        {
+            if (currentPivot == PivotPlacement.BottomRight)
+                rotationAngle = -90f;
+            else if (currentPivot == PivotPlacement.BottomLeft)
+                rotationAngle = 90f;
+            return rotationAngle;
+        }
+
+        return 0f;
     }
     
     private Vector3 FindPivotPosition(Vector3 input)
     {
-        Debug.Log(input);
+        Vector2 _input = input;
         if (input == Vector3.right)
         {
             var topRightPivot = getPivot[PivotPlacement.TopRight];
@@ -116,7 +154,7 @@ public class PlayerMovement : MonoBehaviour
         var pivot2Data = pivot2.GetComponent<Pivot>();
         if (pivot1Data.isTouchingWall && pivot2Data.isTouchingWall)
         {
-            // trigger failure
+            return Vector3.zero;    
         }
         else if(pivot1Data.isTouchingWall)
         {
