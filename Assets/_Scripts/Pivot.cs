@@ -6,20 +6,20 @@ using UnityEngine;
 public class Pivot : MonoBehaviour
 {
     public PivotPlacement pivotPosition;
-    public bool isValidMove;
+    public bool isTouchingWall = false;
 
     private void OnTriggerEnter(Collider other)
     {
-        isValidMove = false;
+        isTouchingWall = true;
     }
     
     private void OnTriggerStay(Collider other)
     {
-        isValidMove = false;
+        isTouchingWall = true;
     }
 
     private void OnTriggerExit(Collider other)
     {
-        isValidMove = true;
+        isTouchingWall = false;
     }
 }

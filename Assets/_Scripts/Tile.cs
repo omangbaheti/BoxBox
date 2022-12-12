@@ -36,14 +36,7 @@ public class Tile : MonoBehaviour
         int tileLength = !Mathf.Approximately(input.x, 0)? tileDimensions.x: tileDimensions.z;
         GameObject landingTile = ReturnLandingTile(tileLength, input);
         return landingTile;
-        for (int i = 0; i < tileDimensions.x; i++)
-        {
-            for (int j = 0; i < tileDimensions.z; j++)
-            {
-                //TODO : verify tiles around landing tile
-            }
-        }
-        
+
     }
 
     public GameObject ReturnLandingTile(int tileLength, Vector3 input)
