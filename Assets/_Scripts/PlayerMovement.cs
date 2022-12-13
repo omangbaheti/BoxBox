@@ -153,12 +153,12 @@ public class PlayerMovement : MonoBehaviour
         }
         if(pivot1Data.isTouchingWall)
         {
-            currentPivot = pivot1Data.pivotPosition;
+            currentPivot = pivot1Data.cornerPlacement;
             return pivot1.position;
         }
         if (pivot2Data.isTouchingWall)
         {
-            currentPivot = pivot2Data.pivotPosition;
+            currentPivot = pivot2Data.cornerPlacement;
             return pivot2.position;
         }
         return Vector3.zero;    
@@ -192,12 +192,12 @@ public class PlayerMovement : MonoBehaviour
                 if (pivot.position.z > transform.position.z)
                 {
                     getPivot[PivotPlacement.TopRight] = pivot;
-                    pivotData.pivotPosition = PivotPlacement.TopRight;
+                    pivotData.cornerPlacement = PivotPlacement.TopRight;
                 }
                 else
                 {
                     getPivot[PivotPlacement.BottomRight] = pivot;
-                    pivotData.pivotPosition = PivotPlacement.BottomRight;
+                    pivotData.cornerPlacement = PivotPlacement.BottomRight;
                 }
             }
             else
@@ -205,13 +205,13 @@ public class PlayerMovement : MonoBehaviour
                 if (pivot.position.z > transform.position.z)
                 {
                     getPivot[PivotPlacement.TopLeft] = pivot;
-                    pivotData.pivotPosition = PivotPlacement.TopLeft;
+                    pivotData.cornerPlacement = PivotPlacement.TopLeft;
                     
                 }
                 else
                 {
                     getPivot[PivotPlacement.BottomLeft] = pivot;
-                    pivotData.pivotPosition = PivotPlacement.BottomLeft;
+                    pivotData.cornerPlacement = PivotPlacement.BottomLeft;
                 }
             }
         }

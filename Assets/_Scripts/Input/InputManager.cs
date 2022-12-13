@@ -6,8 +6,7 @@ public class InputManager : MonoBehaviour
     public bool touchMode;
     public static event Action<Vector2> SwipeAction;
     public static event Action TapAction;
-    public static event Action<Vector2> TouchAction;
-    
+
     [Range(0, 50)][SerializeField] private float swipeRange;
     [Range(0, 50)] [SerializeField] private float tapRange;
 
@@ -22,28 +21,7 @@ public class InputManager : MonoBehaviour
         if(touchMode)
             Swipe();
         else
-        {
-            if (Input.GetKeyDown(KeyCode.A))
-            {
-                SwipeAction?.Invoke(Vector2.left);
-                return;
-            }
-            if (Input.GetKeyDown(KeyCode.D))
-            {
-                SwipeAction?.Invoke(Vector2.right);
-                return;
-            }
-            if (Input.GetKeyDown(KeyCode.W))
-            {
-                SwipeAction?.Invoke(Vector2.up);
-                return;
-            }
-            if (Input.GetKeyDown(KeyCode.S))
-            {
-                SwipeAction?.Invoke(Vector2.down);
-                return;
-            }
-        }
+            DebugTouch();
     }
 
     private void Swipe()
@@ -78,5 +56,30 @@ public class InputManager : MonoBehaviour
                     TapAction?.Invoke();
                 break;
         }
+    }
+
+    private void DebugTouch()
+    {
+    #if UNITY_EDITOR
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            SwipeAction?.Invoke(Vector2.left);
+            return;
+        }
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            SwipeAction?.Invoke(Vector2.right);
+            return;
+        }
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            SwipeAction?.Invoke(Vector2.up);
+            return;
+        }
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            SwipeAction?.Invoke(Vector2.down);
+        }
+    #endif
     }
 }
