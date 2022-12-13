@@ -187,10 +187,6 @@ public class PlayerMovement : MonoBehaviour
         yield return null;
     }
     
-    
-
-    
-
     private void ConfigurePivots()
     {
         foreach (Transform pivot in pivots)
