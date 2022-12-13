@@ -140,7 +140,7 @@ public class PlayerMovement : MonoBehaviour
             var bottomRightPivot = getPivot[PivotPlacement.BottomRight];
             return SelectPivot(bottomLeftPivot, bottomRightPivot);
         }
-        return Vector3.zero;;
+        return Vector3.zero;
     }
     
     private Vector3 SelectPivot(Transform pivot1, Transform pivot2)
