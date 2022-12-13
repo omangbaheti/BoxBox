@@ -1,11 +1,9 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class Pivot : MonoBehaviour
 {
-    public PivotPlacement pivotPosition;
+    [FormerlySerializedAs("pivotPosition")] public PivotPlacement cornerPlacement;
     public bool isTouchingWall = false;
 
     private void OnTriggerEnter(Collider other)

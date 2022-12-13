@@ -36,7 +36,6 @@ public class PlayerMovement : MonoBehaviour
     
     private void OnCollisionEnter(Collision collision)
     {
-
         if (collision.gameObject.CompareTag("Wall"))
         {
             StopCoroutine(currentCoroutine);
@@ -46,14 +45,11 @@ public class PlayerMovement : MonoBehaviour
     
     private IEnumerator OnInvalidPosition()
     {
-        Debug.Log("Collided");
-        canMove = false;
-        isCorrectingPosition = true;
+        canMove = false;  isCorrectingPosition = true;
         transform.DOMove(cachedPose.position, 0.2f);
         yield return transform.DORotate(cachedPose.rotation.eulerAngles, 0.2f, RotateMode.Fast).WaitForCompletion();
         ConfigurePivots();
-        canMove = true;
-        isCorrectingPosition = false;
+        canMove = true; isCorrectingPosition = false;
     }
     private void MoveActionOnPerformed(Vector2 input)
     {
@@ -120,7 +116,6 @@ public class PlayerMovement : MonoBehaviour
     
     private Vector3 FindPivotPosition(Vector3 input)
     {
-        Vector2 _input = input;
         if (input == Vector3.right)
         {
             var topRightPivot = getPivot[PivotPlacement.TopRight];
@@ -145,7 +140,7 @@ public class PlayerMovement : MonoBehaviour
             var bottomRightPivot = getPivot[PivotPlacement.BottomRight];
             return SelectPivot(bottomLeftPivot, bottomRightPivot);
         }
-        return Vector3.zero;;
+        return Vector3.zero;
     }
     
     private Vector3 SelectPivot(Transform pivot1, Transform pivot2)
@@ -156,14 +151,14 @@ public class PlayerMovement : MonoBehaviour
         {
             return Vector3.zero;    
         }
-        else if(pivot1Data.isTouchingWall)
+        if(pivot1Data.isTouchingWall)
         {
-            currentPivot = pivot1Data.pivotPosition;
+            currentPivot = pivot1Data.cornerPlacement;
             return pivot1.position;
         }
-        else if (pivot2Data.isTouchingWall)
+        if (pivot2Data.isTouchingWall)
         {
-            currentPivot = pivot2Data.pivotPosition;
+            currentPivot = pivot2Data.cornerPlacement;
             return pivot2.position;
         }
         return Vector3.zero;    
@@ -196,31 +191,27 @@ public class PlayerMovement : MonoBehaviour
             {
                 if (pivot.position.z > transform.position.z)
                 {
-                    //Debug.Log("TopRight");
                     getPivot[PivotPlacement.TopRight] = pivot;
-                    pivotData.pivotPosition = PivotPlacement.TopRight;
+                    pivotData.cornerPlacement = PivotPlacement.TopRight;
                 }
                 else
                 {
-                    //Debug.Log("BottomRight");
                     getPivot[PivotPlacement.BottomRight] = pivot;
-                    pivotData.pivotPosition = PivotPlacement.BottomRight;
+                    pivotData.cornerPlacement = PivotPlacement.BottomRight;
                 }
             }
             else
             {
                 if (pivot.position.z > transform.position.z)
                 {
-                    //Debug.Log("TopLeft");
                     getPivot[PivotPlacement.TopLeft] = pivot;
-                    pivotData.pivotPosition = PivotPlacement.TopLeft;
+                    pivotData.cornerPlacement = PivotPlacement.TopLeft;
                     
                 }
                 else
                 {
-                    //Debug.Log("BottomLeft");
                     getPivot[PivotPlacement.BottomLeft] = pivot;
-                    pivotData.pivotPosition = PivotPlacement.BottomLeft;
+                    pivotData.cornerPlacement = PivotPlacement.BottomLeft;
                 }
             }
         }
