@@ -17,7 +17,7 @@ public class PlayerMovement : MonoBehaviour
     private Dictionary<PivotPlacement, Transform> getPivot = new Dictionary<PivotPlacement, Transform>();
     private Pose cachedPose = new Pose();
     private IEnumerator currentCoroutine;
-
+    private Vector3 inputVector3D;
     // Start is called before the first frame update
     void Start()
     {
@@ -53,7 +53,7 @@ public class PlayerMovement : MonoBehaviour
     }
     private void MoveActionOnPerformed(Vector2 input)
     {
-        Vector3 inputVector3D = new(input.x, 0f, input.y);
+        inputVector3D = new(input.x, 0f, input.y);
         Move(inputVector3D);
     }
 
@@ -149,7 +149,17 @@ public class PlayerMovement : MonoBehaviour
         var pivot2Data = pivot2.GetComponent<Pivot>();
         if (pivot1Data.isTouchingWall && pivot2Data.isTouchingWall)
         {
-            return Vector3.zero;    
+            Ray sidewardRay = new Ray(transform.position, inputVector3D);
+            Physics.Raycast(sidewardRay, out RaycastHit wallAdjacent, 0.1f);
+            if (wallAdjacent.transform != null)
+            {
+                
+                return Vector3.zero;
+            }
+            if(currentPivot == pivot1Data.cornerPlacement)
+                return pivot1.position;
+            if (currentPivot == pivot2Data.cornerPlacement)
+                return pivot2.position;
         }
         if(pivot1Data.isTouchingWall)
         {

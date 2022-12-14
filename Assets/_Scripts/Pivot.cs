@@ -8,16 +8,19 @@ public class Pivot : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        isTouchingWall = true;
+        if(other.CompareTag("Wall"))
+            isTouchingWall = true;
     }
     
     private void OnTriggerStay(Collider other)
     {
-        isTouchingWall = true;
+        if(other.CompareTag("Wall"))
+            isTouchingWall = true;
     }
 
     private void OnTriggerExit(Collider other)
     {
-        isTouchingWall = false;
+        if(other.CompareTag("Wall"))
+            isTouchingWall = false;
     }
 }
