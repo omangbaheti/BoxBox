@@ -21,6 +21,7 @@ public class PlayerMovement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Application.targetFrameRate = 60;
         ConfigurePivots();
     }
 
@@ -50,6 +51,12 @@ public class PlayerMovement : MonoBehaviour
         yield return transform.DORotate(cachedPose.rotation.eulerAngles, 0.2f, RotateMode.Fast).WaitForCompletion();
         ConfigurePivots();
         canMove = true; isCorrectingPosition = false;
+    }
+
+    public void MoveActionNewInputSystem(InputAction.CallbackContext context)
+    {
+        Vector2 input = context.ReadValue<Vector2>();
+        MoveActionOnPerformed(input);
     }
     private void MoveActionOnPerformed(Vector2 input)
     {
@@ -149,7 +156,16 @@ public class PlayerMovement : MonoBehaviour
         var pivot2Data = pivot2.GetComponent<Pivot>();
         if (pivot1Data.isTouchingWall && pivot2Data.isTouchingWall)
         {
-            return Vector3.zero;    
+            Ray sidewardRay = new Ray(transform.position, inputVector3D);
+            Physics.Raycast(sidewardRay, out RaycastHit wallAdjacent, 0.1f);
+            if (wallAdjacent.transform != null)
+            {
+                return Vector3.zero;
+            }
+            if(currentPivot == pivot1Data.cornerPlacement)
+                return pivot1.position;
+            if (currentPivot == pivot2Data.cornerPlacement)
+                return pivot2.position;
         }
         if(pivot1Data.isTouchingWall)
         {

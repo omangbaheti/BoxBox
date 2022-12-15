@@ -58,7 +58,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 666a692a4b31dcb44a6fb32dbf0ac088, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pivotPosition: 0
+  cornerPlacement: 0
   isTouchingWall: 0
 --- !u!1 &6180376300344219349
 GameObject:
@@ -118,7 +118,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 666a692a4b31dcb44a6fb32dbf0ac088, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pivotPosition: 0
+  cornerPlacement: 0
   isTouchingWall: 0
 --- !u!1 &6180376301509633404
 GameObject:
@@ -178,7 +178,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 666a692a4b31dcb44a6fb32dbf0ac088, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pivotPosition: 0
+  cornerPlacement: 0
   isTouchingWall: 0
 --- !u!1 &6180376301583562295
 GameObject:
@@ -282,7 +282,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.8, y: 0.8, z: 0.8}
+  m_Size: {x: 0.7, y: 0.7, z: 0.7}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &6180376301583562298
 Rigidbody:
@@ -312,9 +312,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3a40e41a1c41c043a45ba04c8d9bc37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  touchMode: 0
-  swipeRange: 0
-  tapRange: 0
+  touchMode: 1
+  swipeRange: 4
+  tapRange: 2
 --- !u!114 &6180376301583562299
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -391,5 +391,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 666a692a4b31dcb44a6fb32dbf0ac088, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pivotPosition: 0
+  cornerPlacement: 0
   isTouchingWall: 0

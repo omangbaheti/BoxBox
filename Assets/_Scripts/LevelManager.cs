@@ -14,31 +14,39 @@ public class LevelManager : MonoBehaviour
         goalTiles = GameObject.FindObjectsOfType<GoalTile>();
         foreach (GoalTile tile in goalTiles)
         {
-            tile.OnTileTriggered += CheckPlayerWin;
+            tile.OnTileTriggered += TriggerPlayerWinCoroutine;
         }
     }
+    
 
-    private void TriggerLevelChange()
+    private void TriggerPlayerWinCoroutine()
     {
-        SceneManager.LoadScene(nextLevelName);
+        StartCoroutine(CheckPlayerWin());
     }
 
-    private void CheckPlayerWin()
+    private IEnumerator CheckPlayerWin()
     {
+        yield return new WaitForSeconds(1.2f);
         foreach (GoalTile tile in goalTiles)
         {
             if (!tile.IsTileTriggered)
-                return;
+                break;
         }
         Debug.Log("PlayerWin");
-        TriggerLevelChange();
+        TriggerLevelChange(nextLevelName);
+    }
+    
+    
+    public void TriggerLevelChange(string nextLevel)
+    {
+        SceneManager.LoadScene(nextLevel);
     }
 
     private void OnDestroy()
     {
         foreach (GoalTile tile in goalTiles)
         {
-            tile.OnTileTriggered -= CheckPlayerWin;
+            tile.OnTileTriggered -= TriggerPlayerWinCoroutine;
         }
     }
 }
