@@ -17,6 +17,7 @@ public class PlayerMovement : MonoBehaviour
     private Dictionary<PivotPlacement, Transform> getPivot = new Dictionary<PivotPlacement, Transform>();
     private Pose cachedPose = new Pose();
     private IEnumerator currentCoroutine;
+    private Vector3 inputVector3D;
 
     // Start is called before the first frame update
     void Start()
@@ -52,15 +53,10 @@ public class PlayerMovement : MonoBehaviour
         ConfigurePivots();
         canMove = true; isCorrectingPosition = false;
     }
-
-    public void MoveActionNewInputSystem(InputAction.CallbackContext context)
-    {
-        Vector2 input = context.ReadValue<Vector2>();
-        MoveActionOnPerformed(input);
-    }
+    
     private void MoveActionOnPerformed(Vector2 input)
     {
-        Vector3 inputVector3D = new(input.x, 0f, input.y);
+        inputVector3D = new(input.x, 0f, input.y);
         Move(inputVector3D);
     }
 
