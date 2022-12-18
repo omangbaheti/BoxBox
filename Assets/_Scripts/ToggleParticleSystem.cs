@@ -1,18 +1,26 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class ToggleParticleSystem : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private ParticleSystem confettiParticleSystem;
+
+    private void Start()
     {
-        
+        confettiParticleSystem = GetComponent<ParticleSystem>();
+        confettiParticleSystem.Pause();
+        LevelManager.OnPlayerWin += TriggerConfetti;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void TriggerConfetti()
     {
-        
+        confettiParticleSystem.Play();
+    }
+
+    private void OnDestroy()
+    {
+        LevelManager.OnPlayerWin -= TriggerConfetti;
     }
 }

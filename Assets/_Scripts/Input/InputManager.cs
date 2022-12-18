@@ -18,7 +18,12 @@ public class InputManager : MonoBehaviour
     
     void Update()
     {
-        Swipe();
+        if(touchMode)
+            Swipe();
+        else
+        {
+            DebugTouch();
+        }
     }
 
     private void Swipe()

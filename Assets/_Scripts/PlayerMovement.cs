@@ -7,7 +7,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] private PivotPlacement currentPivot;
+    [SerializeField] private Transform currentPivot;
     [SerializeField] private Transform[] pivots = new Transform[4];
     
     private PlayerInput playerInput;
@@ -78,38 +78,39 @@ public class PlayerMovement : MonoBehaviour
     private float DetermineRotationAngle(Vector3 input)
     {
         float rotationAngle = 90f;
+        var currentPivotPlacement = currentPivot.GetComponent<Pivot>().cornerPlacement;
         if (input == Vector3.right)
         {
-            if (currentPivot == PivotPlacement.BottomRight)
+            if (currentPivotPlacement == PivotPlacement.BottomRight)
                 rotationAngle = 90f;
-            else if (currentPivot == PivotPlacement.TopRight)
+            else if (currentPivotPlacement == PivotPlacement.TopRight)
                 rotationAngle = -90f;
             return rotationAngle;
         }
 
         if (input == Vector3.left)
         {
-            if (currentPivot == PivotPlacement.BottomLeft)
+            if (currentPivotPlacement == PivotPlacement.BottomLeft)
                 rotationAngle = -90f;
-            else if (currentPivot == PivotPlacement.TopLeft)
+            else if (currentPivotPlacement == PivotPlacement.TopLeft)
                 rotationAngle = 90f;
             return rotationAngle;
         }
 
         if (input == Vector3.forward)
         {
-            if (currentPivot == PivotPlacement.TopRight)
+            if (currentPivotPlacement == PivotPlacement.TopRight)
                 rotationAngle = 90f;
-            else if (currentPivot == PivotPlacement.TopLeft)
+            else if (currentPivotPlacement == PivotPlacement.TopLeft)
                 rotationAngle = -90f;
             return rotationAngle;
         }
 
         if (input == Vector3.back)
         {
-            if (currentPivot == PivotPlacement.BottomRight)
+            if (currentPivotPlacement == PivotPlacement.BottomRight)
                 rotationAngle = -90f;
-            else if (currentPivot == PivotPlacement.BottomLeft)
+            else if (currentPivotPlacement == PivotPlacement.BottomLeft)
                 rotationAngle = 90f;
             return rotationAngle;
         }
@@ -158,19 +159,19 @@ public class PlayerMovement : MonoBehaviour
             {
                 return Vector3.zero;
             }
-            if(currentPivot == pivot1Data.cornerPlacement)
+            if(currentPivot == pivot1)
                 return pivot1.position;
-            if (currentPivot == pivot2Data.cornerPlacement)
+            if (currentPivot == pivot2)
                 return pivot2.position;
         }
         if(pivot1Data.isTouchingWall)
         {
-            currentPivot = pivot1Data.cornerPlacement;
+            currentPivot = pivot1;
             return pivot1.position;
         }
         if (pivot2Data.isTouchingWall)
         {
-            currentPivot = pivot2Data.cornerPlacement;
+            currentPivot = pivot2;
             return pivot2.position;
         }
         return Vector3.zero;    

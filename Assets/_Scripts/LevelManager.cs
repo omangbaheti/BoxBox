@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -8,24 +9,21 @@ using UnityEngine.UI;
 
 public class LevelManager : MonoBehaviour
 {
-    public static Action OnPlayerWin;
+    public static event Action OnPlayerWin;
     private int moveCounter = 0;
+    [SerializeField] private GameObject winScreen;
     [SerializeField] private int[] targetMoves = new []{0,0,0};
     [SerializeField] private string nextLevelName;
     [SerializeField] private GoalTile[] goalTiles;
     [SerializeField] private GameObject StarsUI;
     void Start()
     {
-        goalTiles = GameObject.FindObjectsOfType<GoalTile>();
+        goalTiles = FindObjectsOfType<GoalTile>();
         foreach (GoalTile tile in goalTiles)
         {
             tile.OnTileTriggered += TriggerPlayerWinCoroutine;
         }
-        StarsUI = GameObject.Find("Stars");
-    }
-
-    private void OnEnable()
-    {
+        winScreen.gameObject.SetActive(false);
         InputManager.SwipeAction += MoveActionOnPerformed;
     }
 
@@ -40,11 +38,10 @@ public class LevelManager : MonoBehaviour
         for (int i = 0; i < targetMoves.Length; i++)
         {
             if (moveCounter > targetMoves[i])
-            {
-                Debug.Log("triggered");
+            { 
                 var currentStar = StarsUI.transform.GetChild(i);
-                var starSprite = currentStar.GetComponent<RectTransform>();
-                LeanTween.alpha(starSprite, 0f, 0.35f).setEaseInQuad();
+                var starSprite = currentStar.GetComponent<Image>(); 
+                starSprite.DOFade(0, 0.35f).SetEase(Ease.InQuad); ;
             }
         }
     }
@@ -62,25 +59,40 @@ public class LevelManager : MonoBehaviour
 
     private IEnumerator CheckPlayerWin()
     {
+        bool isWin = false;
         yield return new WaitForSeconds(1.2f);
         foreach (GoalTile tile in goalTiles)
         {
             if (!tile.IsTileTriggered)
+            {
+                isWin = false;
                 break;
+            }
+
+            isWin = true;
         }
         Debug.Log("PlayerWin");
-        OnPlayerWin.Invoke();
-        TriggerLevelChange(nextLevelName);
+        if (isWin)
+        {
+            OnPlayerWin?.Invoke();
+            winScreen.gameObject.SetActive(true);
+        }
     }
     
     
-    public void TriggerLevelChange(string nextLevel)
+    public void TriggerLevelChange()
     {
-        SceneManager.LoadScene(nextLevel);
+        SceneManager.LoadScene(nextLevelName);
+    }
+
+    public void ReloadLevel()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     private void OnDestroy()
     {
+        InputManager.SwipeAction -= MoveActionOnPerformed;
         foreach (GoalTile tile in goalTiles)
         {
             tile.OnTileTriggered -= TriggerPlayerWinCoroutine;
