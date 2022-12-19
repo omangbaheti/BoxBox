@@ -20,6 +20,8 @@
 /[Bb]uilds/
 /[Ll]ogs/
 /[Uu]ser[Ss]ettings/
+/[Tt]est1BoxBox_BackUpThisFolder_ButDontShipItWithYourGame/
+/[Tt]est1BoxBox_BurstDebugInformation_DoNotShip/
 
 # MemoryCaptures can get excessive in size.
 # They also could contain extremely sensitive data
@@ -74,9 +76,5 @@ sysinfo.txt
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
-/[Tt]est1BoxBox_BackUpThisFolder_ButDontShipItWithYourGame/*
-/[Tt]est1BoxBox_BurstDebugInformation_DoNotShip/*
 # End of https://www.toptal.com/developers/gitignore/api/unity,rider
 ProjectSettings/SceneTemplateSettings.json
-	
-Test1BoxBox_BackUpThisFolder_ButDontShipItWithYourGame/*
