@@ -7691,7 +7691,22 @@ PrefabInstance:
     - target: {fileID: 2528735782780119029, guid: 10429e17fb3ae3c42909038544ca4c2d,
         type: 3}
       propertyPath: nextLevelName
-      value: Level10
+      value: Level7
+      objectReference: {fileID: 0}
+    - target: {fileID: 2528735782780119029, guid: 10429e17fb3ae3c42909038544ca4c2d,
+        type: 3}
+      propertyPath: targetMoves.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2528735782780119029, guid: 10429e17fb3ae3c42909038544ca4c2d,
+        type: 3}
+      propertyPath: targetMoves.Array.data[0]
+      value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 2528735782780119029, guid: 10429e17fb3ae3c42909038544ca4c2d,
+        type: 3}
+      propertyPath: targetMoves.Array.data[1]
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 2528735782780119030, guid: 10429e17fb3ae3c42909038544ca4c2d,
         type: 3}

@@ -12833,17 +12833,17 @@ PrefabInstance:
     - target: {fileID: 7949274173995689495, guid: 9ec51da2a2853a0429842183bbf44985,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.76
+      value: 0.11
       objectReference: {fileID: 0}
     - target: {fileID: 7949274173995689495, guid: 9ec51da2a2853a0429842183bbf44985,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 10.99
+      value: 11.76
       objectReference: {fileID: 0}
     - target: {fileID: 7949274173995689495, guid: 9ec51da2a2853a0429842183bbf44985,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -5.41
+      value: -3.47
       objectReference: {fileID: 0}
     - target: {fileID: 7949274173995689495, guid: 9ec51da2a2853a0429842183bbf44985,
         type: 3}
@@ -18114,7 +18114,7 @@ PrefabInstance:
     - target: {fileID: 6180376301583562300, guid: 3497704e31a76cd4d88bd6118e59b411,
         type: 3}
       propertyPath: touchMode
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3497704e31a76cd4d88bd6118e59b411, type: 3}
@@ -20683,7 +20683,7 @@ PrefabInstance:
     - target: {fileID: 2528735782780119029, guid: 10429e17fb3ae3c42909038544ca4c2d,
         type: 3}
       propertyPath: nextLevelName
-      value: Level7
+      value: Level9
       objectReference: {fileID: 0}
     - target: {fileID: 2528735782780119029, guid: 10429e17fb3ae3c42909038544ca4c2d,
         type: 3}
