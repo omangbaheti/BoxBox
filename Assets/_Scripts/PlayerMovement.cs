@@ -1,9 +1,7 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -11,8 +9,6 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Transform[] pivots = new Transform[4];
     
     private IEnumerator currentCoroutine;
-    private PlayerInput playerInput;
-    private InputAction moveAction;
     private bool canMove = true;
     private bool isCorrectingPosition = false;
     private Dictionary<PivotPlacement, Transform> getPivot = new Dictionary<PivotPlacement, Transform>();
@@ -83,7 +79,7 @@ public class PlayerMovement : MonoBehaviour
             canMove = true;
             return;
         }
-        currentCoroutine = RotateBodyAroundPivot(pivotPosition, 0.2f, rotationAngle);
+        currentCoroutine = RotateBodyAroundPivot(pivotPosition, 0.1f, rotationAngle);
         StartCoroutine(currentCoroutine);
     }
     
@@ -256,6 +252,7 @@ public class PlayerMovement : MonoBehaviour
     }
 
 }
+
 
 public enum PivotPlacement
 {

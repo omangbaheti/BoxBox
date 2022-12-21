@@ -314,7 +314,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   touchMode: 1
   quickDistance: {x: 0, y: 0}
-  swipeRange: 4
+  swipeRange: 50
   tapRange: 2
 --- !u!114 &6180376301583562299
 MonoBehaviour:
@@ -328,7 +328,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d48016de98454249a2fc6b92d8b2a80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentPivot: 0
+  currentPivot: {fileID: 0}
   pivots:
   - {fileID: 6180376301509633403}
   - {fileID: 6180376302110641561}
