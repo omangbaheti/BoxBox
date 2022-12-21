@@ -5,6 +5,7 @@ public class InputManager : MonoBehaviour
 {
     public bool touchMode;
     public static event Action<Vector2> SwipeAction;
+    public static event Action<Vector2> OnTouchBegan;
     public static event Action TapAction;
     public Vector2 quickDistance;
     [Range(0, 50)][SerializeField] private float swipeRange;
@@ -35,6 +36,7 @@ public class InputManager : MonoBehaviour
             case TouchPhase.Began:
             {
                 startTouchPosition = primaryTouch.position;
+                OnTouchBegan?.Invoke(startTouchPosition);
                 break;
             }
             case TouchPhase.Moved:

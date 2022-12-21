@@ -10,29 +10,35 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Transform currentPivot;
     [SerializeField] private Transform[] pivots = new Transform[4];
     
+    private IEnumerator currentCoroutine;
     private PlayerInput playerInput;
     private InputAction moveAction;
     private bool canMove = true;
     private bool isCorrectingPosition = false;
     private Dictionary<PivotPlacement, Transform> getPivot = new Dictionary<PivotPlacement, Transform>();
     private Pose cachedPose = new Pose();
-    private IEnumerator currentCoroutine;
     private Vector3 inputVector3D;
+    private Vector2 touchPosition;
+    private Vector2 worldToScreenPosition;
 
     // Start is called before the first frame update
     void Start()
     {
         Application.targetFrameRate = 60;
         ConfigurePivots();
+        Vector3 debugRay = Camera.main.WorldToScreenPoint(transform.position);
+        Debug.Log(debugRay);
     }
 
     private void OnEnable()
     {
+        InputManager.OnTouchBegan += UpdateScreenTouchPosition;
         InputManager.SwipeAction += MoveActionOnPerformed;
     }
 
     private void OnDisable()
     {
+        InputManager.OnTouchBegan -= UpdateScreenTouchPosition;
         InputManager.SwipeAction -= MoveActionOnPerformed;
     }
     
@@ -53,6 +59,11 @@ public class PlayerMovement : MonoBehaviour
         ConfigurePivots();
         canMove = true; isCorrectingPosition = false;
     }
+
+    private void UpdateScreenTouchPosition(Vector2 screenTouch)
+    {
+        touchPosition = screenTouch;
+    }
     
     private void MoveActionOnPerformed(Vector2 input)
     {
@@ -64,6 +75,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if(!canMove) return;
         canMove = false;
+        worldToScreenPosition = Camera.main.WorldToScreenPoint(transform.position);
         Vector3 pivotPosition = FindPivotPosition(input);
         float rotationAngle = DetermineRotationAngle(input);
         if (pivotPosition == Vector3.zero)
@@ -74,10 +86,45 @@ public class PlayerMovement : MonoBehaviour
         currentCoroutine = RotateBodyAroundPivot(pivotPosition, 0.2f, rotationAngle);
         StartCoroutine(currentCoroutine);
     }
+    
+    private Vector3 FindPivotPosition(Vector3 input)
+    {
+        float tolerance = 200;
+        if (input == Vector3.right)
+        {
+            var topRightPivot = getPivot[PivotPlacement.TopRight];
+            var bottomRightPivot = getPivot[PivotPlacement.BottomRight];
+            bool selectTopPivot = touchPosition.y < worldToScreenPosition.y &&  Mathf.Abs(touchPosition.y - worldToScreenPosition.y) < tolerance; // although it doesnt make sense for touch < worldscreen, that is how users intuitively interact with the cube
+            return SelectPivot(topRightPivot, bottomRightPivot, selectTopPivot);
+        }
+        if (input == Vector3.left)
+        {
+            var topLeftPivot = getPivot[PivotPlacement.TopLeft];
+            var bottomLeftPivot = getPivot[PivotPlacement.BottomLeft];
+            bool selectTopPivot = touchPosition.y < worldToScreenPosition.y &&  Mathf.Abs(touchPosition.y - worldToScreenPosition.y) < tolerance;
+            return SelectPivot(topLeftPivot, bottomLeftPivot, selectTopPivot);
+        }
+        if (input == Vector3.forward)
+        {
+            var topLeftPivot = getPivot[PivotPlacement.TopLeft];
+            var topRightPivot = getPivot[PivotPlacement.TopRight];
+            bool selectRightPivot = touchPosition.x < worldToScreenPosition.x &&  Mathf.Abs(touchPosition.x - worldToScreenPosition.x) < tolerance;
+            return SelectPivot(topRightPivot, topLeftPivot, selectRightPivot);
+        }
+        if (input == Vector3.back)
+        {
+            var bottomLeftPivot = getPivot[PivotPlacement.BottomLeft];
+            var bottomRightPivot = getPivot[PivotPlacement.BottomRight];
+            bool selectRightPivot =  touchPosition.x < worldToScreenPosition.x &&  Mathf.Abs(touchPosition.x - worldToScreenPosition.x) < tolerance;
+            return SelectPivot(bottomRightPivot, bottomLeftPivot, selectRightPivot);
+        }
+        return Vector3.zero;
+    }
 
     private float DetermineRotationAngle(Vector3 input)
     {
         float rotationAngle = 90f;
+        if (currentPivot == null) return 0f;
         var currentPivotPlacement = currentPivot.GetComponent<Pivot>().cornerPlacement;
         if (input == Vector3.right)
         {
@@ -118,36 +165,7 @@ public class PlayerMovement : MonoBehaviour
         return 0f;
     }
     
-    private Vector3 FindPivotPosition(Vector3 input)
-    {
-        if (input == Vector3.right)
-        {
-            var topRightPivot = getPivot[PivotPlacement.TopRight];
-            var bottomRightPivot = getPivot[PivotPlacement.BottomRight];
-            return SelectPivot(topRightPivot, bottomRightPivot);
-        }
-        if (input == Vector3.left)
-        {
-            var topLeftPivot = getPivot[PivotPlacement.TopLeft];
-            var bottomLeftPivot = getPivot[PivotPlacement.BottomLeft];
-            return SelectPivot(topLeftPivot, bottomLeftPivot);
-        }
-        if (input == Vector3.forward)
-        {
-            var topLeftPivot = getPivot[PivotPlacement.TopLeft];
-            var topRightPivot = getPivot[PivotPlacement.TopRight];
-            return SelectPivot(topLeftPivot, topRightPivot);
-        }
-        if (input == Vector3.back)
-        {
-            var bottomLeftPivot = getPivot[PivotPlacement.BottomLeft];
-            var bottomRightPivot = getPivot[PivotPlacement.BottomRight];
-            return SelectPivot(bottomLeftPivot, bottomRightPivot);
-        }
-        return Vector3.zero;
-    }
-    
-    private Vector3 SelectPivot(Transform pivot1, Transform pivot2)
+    private Vector3 SelectPivot(Transform pivot1, Transform pivot2, bool bigBrainBool)
     {
         var pivot1Data = pivot1.GetComponent<Pivot>();
         var pivot2Data = pivot2.GetComponent<Pivot>();
@@ -159,10 +177,17 @@ public class PlayerMovement : MonoBehaviour
             {
                 return Vector3.zero;
             }
-            if(currentPivot == pivot1)
+
+            if (bigBrainBool)
+            {
+                currentPivot = pivot1;
                 return pivot1.position;
-            if (currentPivot == pivot2)
+            }
+            else
+            {
+                currentPivot = pivot2;
                 return pivot2.position;
+            }
         }
         if(pivot1Data.isTouchingWall)
         {
