@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
@@ -10,8 +11,8 @@ public class PlayerMovement : MonoBehaviour
     
     private IEnumerator currentCoroutine;
     private bool canMove = true;
-    private bool isCorrectingPosition = false;
     private Dictionary<PivotPlacement, Transform> getPivot = new Dictionary<PivotPlacement, Transform>();
+    private bool isCorrectingPosition;
     private Pose cachedPose = new Pose();
     private Vector3 inputVector3D;
     private Vector2 touchPosition;
@@ -64,6 +65,7 @@ public class PlayerMovement : MonoBehaviour
     private void MoveActionOnPerformed(Vector2 input)
     {
         inputVector3D = new(input.x, 0f, input.y);
+
         Move(inputVector3D);
     }
 
@@ -72,6 +74,13 @@ public class PlayerMovement : MonoBehaviour
         if(!canMove) return;
         canMove = false;
         worldToScreenPosition = Camera.main.WorldToScreenPoint(transform.position);
+        Debug.Log((touchPosition - worldToScreenPosition).magnitude);
+        // if((touchPosition - worldToScreenPosition).sqrMagnitude >= 200*200)
+        // {
+        //     canMove = true;
+        //     return;
+        //     
+        // }
         Vector3 pivotPosition = FindPivotPosition(input);
         float rotationAngle = DetermineRotationAngle(input);
         if (pivotPosition == Vector3.zero)
@@ -86,33 +95,63 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 FindPivotPosition(Vector3 input)
     {
         float tolerance = 200;
+        List<Transform> pivotsTouchingWall = new List<Transform>();
+        List<Transform> priorityTransformList = new List<Transform>();
+        foreach (Transform pivot in pivots)
+        {
+            var pivotData = pivot.GetComponent<Pivot>();
+            if (pivotData.isTouchingWall)
+            {
+                pivotsTouchingWall.Add(pivot);
+            }
+        }
         if (input == Vector3.right)
         {
-            var topRightPivot = getPivot[PivotPlacement.TopRight];
-            var bottomRightPivot = getPivot[PivotPlacement.BottomRight];
-            bool selectTopPivot = touchPosition.y < worldToScreenPosition.y &&  Mathf.Abs(touchPosition.y - worldToScreenPosition.y) < tolerance; // although it doesnt make sense for touch < worldscreen, that is how users intuitively interact with the cube
-            return SelectPivot(topRightPivot, bottomRightPivot, selectTopPivot);
+            priorityTransformList.Clear();
+            priorityTransformList.Add(getPivot[PivotPlacement.TopRight]);
+            priorityTransformList.Add(getPivot[PivotPlacement.TopLeft]);
+            priorityTransformList.Add(getPivot[PivotPlacement.BottomRight]);
+            priorityTransformList.Add(getPivot[PivotPlacement.BottomLeft]);
+            bool selectTopPivot = touchPosition.y < worldToScreenPosition.y && Mathf.Abs(touchPosition.y - worldToScreenPosition.y) < tolerance; // although it doesnt make sense for touch < worldscreen, that is how users intuitively interact with the cube
+            currentPivot = SelectPivot(pivotsTouchingWall, priorityTransformList, selectTopPivot);
+            Debug.Log(currentPivot);
+            return currentPivot.position;
         }
         if (input == Vector3.left)
         {
-            var topLeftPivot = getPivot[PivotPlacement.TopLeft];
-            var bottomLeftPivot = getPivot[PivotPlacement.BottomLeft];
-            bool selectTopPivot = touchPosition.y < worldToScreenPosition.y &&  Mathf.Abs(touchPosition.y - worldToScreenPosition.y) < tolerance;
-            return SelectPivot(topLeftPivot, bottomLeftPivot, selectTopPivot);
+            priorityTransformList.Clear();
+            priorityTransformList.Add(getPivot[PivotPlacement.TopLeft]);
+            priorityTransformList.Add(getPivot[PivotPlacement.TopRight]);
+            priorityTransformList.Add(getPivot[PivotPlacement.BottomLeft]);
+            priorityTransformList.Add(getPivot[PivotPlacement.BottomRight]);
+            bool selectRightPivot = touchPosition.x < worldToScreenPosition.x && Mathf.Abs(touchPosition.x - worldToScreenPosition.x) < tolerance; // although it doesnt make sense for touch < worldscreen, that is how users intuitively interact with the cube
+            currentPivot = SelectPivot(pivotsTouchingWall, priorityTransformList, selectRightPivot);
+            Debug.Log(currentPivot);
+            return currentPivot.position;
         }
         if (input == Vector3.forward)
         {
-            var topLeftPivot = getPivot[PivotPlacement.TopLeft];
-            var topRightPivot = getPivot[PivotPlacement.TopRight];
-            bool selectRightPivot = touchPosition.x < worldToScreenPosition.x &&  Mathf.Abs(touchPosition.x - worldToScreenPosition.x) < tolerance;
-            return SelectPivot(topRightPivot, topLeftPivot, selectRightPivot);
+            priorityTransformList.Clear();
+            priorityTransformList.Add(getPivot[PivotPlacement.TopRight]);
+            priorityTransformList.Add(getPivot[PivotPlacement.BottomRight]);
+            priorityTransformList.Add(getPivot[PivotPlacement.TopLeft]);
+            priorityTransformList.Add(getPivot[PivotPlacement.BottomLeft]);
+            bool selectRightPivot = touchPosition.x < worldToScreenPosition.x && Mathf.Abs(touchPosition.x - worldToScreenPosition.x) < tolerance; // although it doesnt make sense for touch < worldscreen, that is how users intuitively interact with the cube
+            currentPivot = SelectPivot(pivotsTouchingWall, priorityTransformList, selectRightPivot);
+            Debug.Log(currentPivot);
+            return currentPivot.position;
         }
         if (input == Vector3.back)
         {
-            var bottomLeftPivot = getPivot[PivotPlacement.BottomLeft];
-            var bottomRightPivot = getPivot[PivotPlacement.BottomRight];
-            bool selectRightPivot =  touchPosition.x < worldToScreenPosition.x &&  Mathf.Abs(touchPosition.x - worldToScreenPosition.x) < tolerance;
-            return SelectPivot(bottomRightPivot, bottomLeftPivot, selectRightPivot);
+            priorityTransformList.Clear();
+            priorityTransformList.Add(getPivot[PivotPlacement.BottomRight]);
+            priorityTransformList.Add(getPivot[PivotPlacement.TopRight]);
+            priorityTransformList.Add(getPivot[PivotPlacement.BottomLeft]);
+            priorityTransformList.Add(getPivot[PivotPlacement.TopLeft]);
+            bool selectTopPivot = touchPosition.y < worldToScreenPosition.y && Mathf.Abs(touchPosition.y - worldToScreenPosition.y) < tolerance; // although it doesnt make sense for touch < worldscreen, that is how users intuitively interact with the cube
+            currentPivot = SelectPivot(pivotsTouchingWall, priorityTransformList, selectTopPivot);
+            Debug.Log(currentPivot);
+            return currentPivot.position;
         }
         return Vector3.zero;
     }
@@ -161,41 +200,23 @@ public class PlayerMovement : MonoBehaviour
         return 0f;
     }
     
-    private Vector3 SelectPivot(Transform pivot1, Transform pivot2, bool bigBrainBool)
+    private Transform SelectPivot(List<Transform> pivotsTouchingWall, List<Transform> priorityTransformList, bool bigBrenBool)
     {
-        var pivot1Data = pivot1.GetComponent<Pivot>();
-        var pivot2Data = pivot2.GetComponent<Pivot>();
-        if (pivot1Data.isTouchingWall && pivot2Data.isTouchingWall)
+        if (bigBrenBool)
         {
-            Ray sidewardRay = new Ray(transform.position, inputVector3D);
-            Physics.Raycast(sidewardRay, out RaycastHit wallAdjacent, 0.1f);
-            if (wallAdjacent.transform != null)
-            {
-                return Vector3.zero;
-            }
-
-            if (bigBrainBool)
-            {
-                currentPivot = pivot1;
-                return pivot1.position;
-            }
-            else
-            {
-                currentPivot = pivot2;
-                return pivot2.position;
-            }
+            if (pivotsTouchingWall.Contains(priorityTransformList[0]))
+                return priorityTransformList[0];
+            if (pivotsTouchingWall.Contains(priorityTransformList[1]))
+                return priorityTransformList[1];
         }
-        if(pivot1Data.isTouchingWall)
+        else
         {
-            currentPivot = pivot1;
-            return pivot1.position;
+            if (pivotsTouchingWall.Contains(priorityTransformList[3]))
+                return priorityTransformList[3];
+            if (pivotsTouchingWall.Contains(priorityTransformList[4]))
+                return priorityTransformList[4];
         }
-        if (pivot2Data.isTouchingWall)
-        {
-            currentPivot = pivot2;
-            return pivot2.position;
-        }
-        return Vector3.zero;    
+        throw new InvalidOperationException();
     }
 
     private IEnumerator RotateBodyAroundPivot(Vector3 position, float transitionTime, float angle)
@@ -260,5 +281,10 @@ public enum PivotPlacement
     TopRight = 1,
     BottomLeft = 2,
     BottomRight = 3
+}
+
+class PivotData
+{
+    
 }
 
