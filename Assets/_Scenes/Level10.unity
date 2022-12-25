@@ -21449,7 +21449,7 @@ PrefabInstance:
     - target: {fileID: 6180376301583562291, guid: 3497704e31a76cd4d88bd6118e59b411,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6180376301583562291, guid: 3497704e31a76cd4d88bd6118e59b411,
         type: 3}
@@ -21459,7 +21459,7 @@ PrefabInstance:
     - target: {fileID: 6180376301583562291, guid: 3497704e31a76cd4d88bd6118e59b411,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6180376301583562291, guid: 3497704e31a76cd4d88bd6118e59b411,
         type: 3}
@@ -21479,7 +21479,7 @@ PrefabInstance:
     - target: {fileID: 6180376301583562291, guid: 3497704e31a76cd4d88bd6118e59b411,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 6180376301583562291, guid: 3497704e31a76cd4d88bd6118e59b411,
         type: 3}
@@ -21489,7 +21489,7 @@ PrefabInstance:
     - target: {fileID: 6180376301583562291, guid: 3497704e31a76cd4d88bd6118e59b411,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 6180376301583562291, guid: 3497704e31a76cd4d88bd6118e59b411,
         type: 3}
@@ -21504,7 +21504,7 @@ PrefabInstance:
     - target: {fileID: 6180376301583562291, guid: 3497704e31a76cd4d88bd6118e59b411,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: 90
       objectReference: {fileID: 0}
     - target: {fileID: 6180376301583562291, guid: 3497704e31a76cd4d88bd6118e59b411,
         type: 3}
@@ -21520,6 +21520,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: PlayerCube
+      objectReference: {fileID: 0}
+    - target: {fileID: 6180376301583562299, guid: 3497704e31a76cd4d88bd6118e59b411,
+        type: 3}
+      propertyPath: pivots.Array.size
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6180376301583562300, guid: 3497704e31a76cd4d88bd6118e59b411,
         type: 3}
