@@ -60,7 +60,7 @@ public class LevelManager : MonoBehaviour
     private IEnumerator CheckPlayerWin()
     {
         bool isWin = false;
-        yield return new WaitForSeconds(1.2f);
+        new WaitForSeconds(0.4f);
         foreach (GoalTile tile in goalTiles)
         {
             if (!tile.IsTileTriggered)
@@ -77,6 +77,8 @@ public class LevelManager : MonoBehaviour
             OnPlayerWin?.Invoke();
             winScreen.gameObject.SetActive(true);
         }
+
+        yield return null;
     }
     
     

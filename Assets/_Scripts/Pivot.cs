@@ -9,6 +9,7 @@ public class Pivot : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log(other.tag);
         if(other.CompareTag("Tile"))
             isTouchingWall = true;
     }

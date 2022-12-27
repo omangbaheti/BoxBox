@@ -7742,6 +7742,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: LevelManager
       objectReference: {fileID: 0}
+    - target: {fileID: 6349236028753921291, guid: 10429e17fb3ae3c42909038544ca4c2d,
+        type: 3}
+      propertyPath: m_text
+      value: Level 6
+      objectReference: {fileID: 0}
     - target: {fileID: 7905273647193468128, guid: 10429e17fb3ae3c42909038544ca4c2d,
         type: 3}
       propertyPath: m_AnchorMax.y

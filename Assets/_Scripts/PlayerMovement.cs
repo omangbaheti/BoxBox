@@ -71,13 +71,11 @@ public class PlayerMovement : MonoBehaviour
 
     private void Move(Vector3 input)
     {
-        if(!canMove) return;
+        if(!canMove) {Debug.Log("CannotMove"); return;}
         canMove = false;
         worldToScreenPosition = Camera.main.WorldToScreenPoint(transform.position);
-        //Debug.Log((touchPosition - worldToScreenPosition).magnitude);
-        Vector3 pivotPosition = FindPivotPosition(input);
-        float rotationAngle = DetermineRotationAngle(input);
-        currentCoroutine = RotateBodyAroundPivot(pivotPosition, 0.1f, rotationAngle);
+        Vector3 pivotPosition = FindPivotPosition(input); 
+        currentCoroutine = RotateBodyAroundPivot(pivotPosition, 0.1f, -90);
         StartCoroutine(currentCoroutine);
     }
     
@@ -87,7 +85,9 @@ public class PlayerMovement : MonoBehaviour
         {
             if (!getPivot.ContainsKey(PivotPlacement.Right))
             {
+                Debug.Log("Yeh kya gadbad hai");
                 ConfigurePivots();
+                Debug.Log($"{getPivot[PivotPlacement.Right]}");
             }
             return getPivot[PivotPlacement.Right].position;
         }
@@ -95,7 +95,9 @@ public class PlayerMovement : MonoBehaviour
         {
             if (!getPivot.ContainsKey(PivotPlacement.Left))
             {
+                Debug.Log("Yeh kya gadbad hai");
                 ConfigurePivots();
+                Debug.Log($"{getPivot[PivotPlacement.Left]}");
             }
             return getPivot[PivotPlacement.Left].position;
         }
@@ -103,7 +105,9 @@ public class PlayerMovement : MonoBehaviour
         {
             if (!getPivot.ContainsKey(PivotPlacement.Up))
             {
+                Debug.Log("Yeh kya gadbad hai");
                 ConfigurePivots();
+                Debug.Log($"{getPivot[PivotPlacement.Up]}");
             }
             return getPivot[PivotPlacement.Up].position;
         }
@@ -111,7 +115,9 @@ public class PlayerMovement : MonoBehaviour
         {
             if (!getPivot.ContainsKey(PivotPlacement.Down))
             {
+                Debug.Log("Yeh kya gadbad hai");
                 ConfigurePivots();
+                Debug.Log($"{getPivot[PivotPlacement.Down]}");
             }
             return getPivot[PivotPlacement.Down].position;
         }
@@ -119,30 +125,6 @@ public class PlayerMovement : MonoBehaviour
         throw new InvalidOperationException();
     }
 
-    private float DetermineRotationAngle(Vector3 input)
-    {
-        float rotationAngle = 90;
-        if (input == Vector3.right)
-        {
-            return -rotationAngle;
-        }
-        if (input == Vector3.left)
-        {
-            return -rotationAngle;
-        }
-        if (input == Vector3.forward)
-        {
-            return -rotationAngle;
-        }
-        if (input == Vector3.back)
-        {
-            return -rotationAngle;
-        }
-
-
-        throw new InvalidOperationException();
-    }
-    
 
     private IEnumerator RotateBodyAroundPivot(Vector3 position, float transitionTime, float angle)
     {
@@ -157,7 +139,6 @@ public class PlayerMovement : MonoBehaviour
             transform.RotateAround(position, Vector3.Cross(inputVector3D, Vector3.up), rotationAngle);
             yield return null;
         }
-        yield return new WaitForSeconds(0.1f);
         ConfigurePivots();
         canMove = true;
     }
@@ -172,14 +153,14 @@ public class PlayerMovement : MonoBehaviour
             
             if (pivot.position.x -transform.position.x > 0.01)
             {
-                Debug.Log("RightPivotDetected");
+                //Debug.Log("RightPivotDetected");
                 getPivot[PivotPlacement.Right] = pivot;
                 pivotData.cornerPlacement = PivotPlacement.Right;
                 continue;
             }
             if(transform.position.x - pivot.position.x > 0.01)
             {
-                Debug.Log("LeftPivotDetected");
+                //Debug.Log("LeftPivotDetected");
                 getPivot[PivotPlacement.Left] = pivot;
                 pivotData.cornerPlacement = PivotPlacement.Left;
                 continue;
@@ -187,14 +168,14 @@ public class PlayerMovement : MonoBehaviour
 
             if (pivot.position.z - transform.position.z > 0.01)
             {
-                Debug.Log("UpPivotDetected");
+                //Debug.Log("UpPivotDetected");
                 getPivot[PivotPlacement.Up] = pivot;
                 pivotData.cornerPlacement = PivotPlacement.Up;
                 continue;
             }
             if (transform.position.z - pivot.position.z > 0.01)
             {
-                Debug.Log("DownPivotDetected");
+                //Debug.Log("DownPivotDetected");
                 getPivot[PivotPlacement.Down] = pivot;
                 pivotData.cornerPlacement = PivotPlacement.Down;
                 continue;
