@@ -6,36 +6,46 @@ using UnityEngine;
 public class GoalTile : MonoBehaviour
 {
     [SerializeField] private bool isTileTriggered;
-
+    public event Action OnTileTriggered;
+    public bool[] isRaycastHit = new bool[4];
     public bool IsTileTriggered => isTileTriggered;
 
-    public Action OnTileTriggered;
+    private void Update()
+    {
+        CheckGoal();
+    }
 
-    private void OnTriggerEnter(Collider other)
+    private void CheckGoal()
     {
-        if (other.gameObject.CompareTag("Player"))
+        isTileTriggered = false;
+        for(int i = 0; i < isRaycastHit.Length; i++)
         {
-            isTileTriggered = true;
-            OnTileTriggered?.Invoke();
+            var raycastChild = transform.GetChild(i);
+            Ray upwardRay = new Ray(raycastChild.position, Vector3.up);
+            Debug.DrawRay(raycastChild.position, Vector3.up * 0.4f, Color.red);
+            if (Physics.Raycast(upwardRay, out RaycastHit hitInfo, 0.4f))
+            {
+                if (hitInfo.transform.CompareTag("Player"))
+                {
+                    isRaycastHit[i] = true;
+                }
+                else
+                {
+                    isRaycastHit[i] = false;
+                }
+            }
+            else
+            {
+                isRaycastHit[i] = false;
+            }
         }
-    }
-    
-    private void OnTriggerStay(Collider other)
-    {
-        if (other.gameObject.CompareTag("Player"))
+
+        foreach (bool touch in isRaycastHit)
         {
-            isTileTriggered = true;
+            if(!touch) return;
         }
+
+        isTileTriggered = true;
+        OnTileTriggered?.Invoke();
     }
-    
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.gameObject.CompareTag("Player"))
-        {
-            isTileTriggered = false;
-            OnTileTriggered?.Invoke();
-        }
-    }
-    
-    
 }

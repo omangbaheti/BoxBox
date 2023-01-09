@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -8,19 +9,20 @@ public class Pivot : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag("Wall"))
+        Debug.Log(other.tag);
+        if(other.CompareTag("Tile"))
             isTouchingWall = true;
     }
     
     private void OnTriggerStay(Collider other)
     {
-        if(other.CompareTag("Wall"))
+        if(other.CompareTag("Tile"))
             isTouchingWall = true;
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if(other.CompareTag("Wall"))
+        if(other.CompareTag("Tile"))
             isTouchingWall = false;
     }
 }

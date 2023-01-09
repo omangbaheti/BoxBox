@@ -5,11 +5,12 @@ public class InputManager : MonoBehaviour
 {
     public bool touchMode;
     public static event Action<Vector2> SwipeAction;
+    public static event Action<Vector2> OnTouchBegan;
     public static event Action TapAction;
-
+    public Vector2 quickDistance;
     [Range(0, 50)][SerializeField] private float swipeRange;
     [Range(0, 50)] [SerializeField] private float tapRange;
-
+    
     private Vector2 startTouchPosition;
     private Vector2 currentPosition;
     private Vector2 endTouchPosition;
@@ -21,7 +22,9 @@ public class InputManager : MonoBehaviour
         if(touchMode)
             Swipe();
         else
+        {
             DebugTouch();
+        }
     }
 
     private void Swipe()
@@ -33,18 +36,26 @@ public class InputManager : MonoBehaviour
             case TouchPhase.Began:
             {
                 startTouchPosition = primaryTouch.position;
+                OnTouchBegan?.Invoke(startTouchPosition);
                 break;
             }
             case TouchPhase.Moved:
             {
                 currentPosition = primaryTouch.position;
-                Vector2 quickDistance = currentPosition - startTouchPosition;
+                quickDistance = currentPosition - startTouchPosition;
                 if (stopTouch) return;
             
-                if (quickDistance.sqrMagnitude > swipeRange * swipeRange)
+                if (quickDistance.x * quickDistance.x> swipeRange * swipeRange)
                 {
-                    SwipeAction?.Invoke(quickDistance.normalized);
+                    SwipeAction?.Invoke(new Vector2(Mathf.Sign(quickDistance.x),0f));
                     stopTouch = true;
+                    break;
+                }
+                if (quickDistance.y * quickDistance.y> swipeRange * swipeRange)
+                {
+                    SwipeAction?.Invoke(new Vector2(0f,Mathf.Sign(quickDistance.y)));
+                    stopTouch = true;
+                    break;
                 }
                 break;
             }
@@ -55,6 +66,7 @@ public class InputManager : MonoBehaviour
                 if(finalDistance.sqrMagnitude<tapRange*tapRange)
                     TapAction?.Invoke();
                 break;
+            
         }
     }
 
