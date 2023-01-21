@@ -9,6 +9,7 @@ public class Tutorial : MonoBehaviour
 {
     [SerializeField] private Transform startPoint;
     [SerializeField] private Image swipeImage;
+    [SerializeField] private bool enableSwipeUpTutorial;
     private bool tutorialComplete = false;
     private bool swipeUpTutorial = false;
     private bool isReady = true;
@@ -40,19 +41,29 @@ public class Tutorial : MonoBehaviour
             offset = -300f;
         }
 
-        
     }
 
     private void SetSwipeUp(Vector2 input)
     {
-        if (input == Vector2.right)
+        if (enableSwipeUpTutorial)
         {
-            swipeUpTutorial = true;
-        }
+            if (input == Vector2.right)
+            {
+                swipeUpTutorial = true;
+            }
 
-        if (swipeUpTutorial && input == Vector2.up)
+
+            if (swipeUpTutorial && input == Vector2.up)
+            {
+                tutorialComplete = true;
+            }
+        }
+        else
         {
-            tutorialComplete = true;
+            if (input == Vector2.right)
+            {
+                tutorialComplete = true;
+            }
         }
     }
     

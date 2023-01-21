@@ -6,11 +6,23 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Moonee/MoonSDK/Scenes/MoonSDKScene.unity
+    guid: 9fc0d4010bbf28b4594072e72b8655ab
+  - enabled: 1
     path: Assets/_Scenes/MainMenu.unity
     guid: 36b8ea9fc2ae97e4e98a9595f15efda1
   - enabled: 1
-    path: Assets/_Scenes/Level1.unity
+    path: Assets/_Scenes/Level-1.unity
+    guid: 480adc91df68f9741b4227bdacb04712
+  - enabled: 1
+    path: Assets/_Scenes/Level-2.unity
     guid: 57e22e31bcb36a84983951ed772b63e6
+  - enabled: 1
+    path: Assets/_Scenes/Level0.unity
+    guid: 5c29ecddd68115645867f43108572e77
+  - enabled: 1
+    path: Assets/_Scenes/Level1.unity
+    guid: 4bce06de8d4578241bde0992f79b8a87
   - enabled: 1
     path: Assets/_Scenes/Level2.unity
     guid: 2eab1369ca71a1e4e80a330372553970
