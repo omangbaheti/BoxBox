@@ -18,7 +18,7 @@ MonoBehaviour:
   appIds:
   - 448356124049106
   appLabels:
-  - BoxBox
+  - SlideBox
   cookie: 1
   logging: 1
   status: 1

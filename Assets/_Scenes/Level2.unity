@@ -5360,6 +5360,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: LevelManager
       objectReference: {fileID: 0}
+    - target: {fileID: 2528735782780119030, guid: 10429e17fb3ae3c42909038544ca4c2d,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6349236028753921291, guid: 10429e17fb3ae3c42909038544ca4c2d,
         type: 3}
       propertyPath: m_text
@@ -5498,6 +5503,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: PlayerCube
+      objectReference: {fileID: 0}
+    - target: {fileID: 6180376301583562295, guid: 3497704e31a76cd4d88bd6118e59b411,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6180376301583562299, guid: 3497704e31a76cd4d88bd6118e59b411,
         type: 3}
