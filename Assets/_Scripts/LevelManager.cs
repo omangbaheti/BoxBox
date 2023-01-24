@@ -13,7 +13,7 @@ public class LevelManager : MonoBehaviour
     private int moveCounter = 0;
     [SerializeField] private GameObject winScreen;
     [SerializeField] private int[] targetMoves = new []{0,0,0};
-    [SerializeField] private string nextLevelName;
+    [SerializeField] private int nextLevelIndex   ;
     [SerializeField] private GoalTile[] goalTiles;
     [SerializeField] private GameObject StarsUI;
     void Start()
@@ -84,7 +84,12 @@ public class LevelManager : MonoBehaviour
     
     public void TriggerLevelChange()
     {
-        SceneManager.LoadScene(nextLevelName);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+    }
+
+    public void PlayAgain()
+    {
+        SceneManager.LoadScene(0);
     }
 
     public void ReloadLevel()
